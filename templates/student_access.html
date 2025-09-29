@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Enter Access Code</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="auth-card">
+        <h1>Enter Access Code</h1>
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+        <form method="post">
+            <label>Access Code</label>
+            <input type="text" name="access_code" placeholder="Code provided by educator" />
+            <button type="submit">Continue</button>
+        </form>
+        <div class="muted"><a href="/student">Back to dashboard</a></div>
+    </div>
+</body>
+</html>
+
+

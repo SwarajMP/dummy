@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Educator Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header class="appbar">
+        <div>Educator: {{ name }}</div>
+        <nav>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2>Your Tests</h2>
+            <div style="margin-bottom:12px"><a href="/educator/tests/new">Create New Test</a></div>
+            {% if tests %}
+                <ul class="list">
+                    {% for t in tests %}
+                        <li>
+                            <div class="muted">{{ t.id }}</div>
+                            <div><strong>{{ t.title }}</strong> — code: <span class="mono">{{ t.access_code }}</span></div>
+                            <div><a href="/educator/tests/{{ t.id }}">Open</a></div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="muted">No tests yet.</div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
+
+

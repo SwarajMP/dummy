@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Submission Detail</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header class="appbar">
+        <div>Submission by {{ submission.student_name }}</div>
+        <nav>
+            <a href="/educator">Back</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2>Problem</h2>
+            <pre class="mono">{{ submission.problem_description }}</pre>
+        </section>
+        <section class="card">
+            <h2>Student Code</h2>
+            <pre class="mono">{{ submission.student_code }}</pre>
+        </section>
+    </main>
+</body>
+</html>
+
+

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create Test</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="auth-card">
+        <h1>Create Test</h1>
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+        <form method="post">
+            <label>Title</label>
+            <input type="text" name="title" placeholder="Test title" />
+            <label>Problem Description</label>
+            <textarea name="problem_description" rows="8" placeholder="Describe the problem"></textarea>
+            <div class="muted">AI will generate test cases and a scenario automatically from your description.</div>
+            <label>Access Code</label>
+            <input type="text" name="access_code" placeholder="Unique code students will enter" />
+            <button type="submit">Create</button>
+        </form>
+        <div class="muted"><a href="/educator">Back</a></div>
+    </div>
+</body>
+</html>
+
+

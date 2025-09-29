@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ test.title }}</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header class="appbar">
+        <div>{{ test.title }}</div>
+        <nav>
+            <a href="/educator">Back</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2>Details</h2>
+            <div>Access code: <span class="mono">{{ test.access_code }}</span></div>
+            <div class="muted">Subject: {{ test.subject or 'N/A' }} • Language: {{ test.language or 'N/A' }} • Topic: {{ test.topic or 'N/A' }}</div>
+            <h3>Problem</h3>
+            <pre class="mono">{{ test.problem_description }}</pre>
+            {% if test.scenario %}
+                <h3>Scenario</h3>
+                <pre class="mono">{{ test.scenario }}</pre>
+            {% endif %}
+            {% if test.test_cases_code %}
+                <h3>Generated Tests</h3>
+                <pre class="mono">{{ test.test_cases_code }}</pre>
+            {% endif %}
+        </section>
+        <section class="card">
+            <h2>Test Results Summary</h2>
+            <canvas id="chart-passfail" height="140"></canvas>
+        </section>
+        <section class="card">
+            <h2>Submissions</h2>
+            <div class="muted">Stats — Total: {{ stats.total }} | Passed: {{ stats.passed }} | Failed: {{ stats.failed }}</div>
+            <div style="margin:8px 0">
+                <a href="/educator/tests/{{ test.id }}?status=all">All</a>
+                |
+                <a href="/educator/tests/{{ test.id }}?status=passed">Passed</a>
+                |
+                <a href="/educator/tests/{{ test.id }}?status=failed">Failed</a>
+            </div>
+            {% if submissions %}
+                <ul class="list">
+                    {% for s in submissions %}
+                        <li>
+                            <div class="muted">
+                                {{ s.created_at }} • {{ s.student_name }} —
+                                {% if s.evaluation %}
+                                    {{ 'Passed' if s.evaluation['pass'] else 'Failed' }} ({{ s.evaluation.score }}%)
+                                    {% if s.evaluation.complexity %}
+                                        • Time: {{ s.evaluation.complexity.time }} • Space: {{ s.evaluation.complexity.space }}
+                                    {% endif %}
+                                {% else %}
+                                    Pending
+                                {% endif %}
+                            </div>
+                            <div><a href="/educator/student/{{ s.student_name }}">View performance</a></div>
+                            <details>
+                                <summary>View Code</summary>
+                                <pre class="mono">{{ s.student_code }}</pre>
+                            </details>
+                            {% if s.evaluation and s.evaluation.tests %}
+                                <details>
+                                    <summary>Failed Tests / Reasons</summary>
+                                    <ul>
+                                        {% for t in s.evaluation.tests %}
+                                            {% if t.status == 'failed' %}
+                                                <li><span class="mono">{{ t.name }}</span>: {{ t.error }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </details>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="muted">No submissions yet.</div>
+            {% endif %}
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    (function(){
+        let pfChart;
+        async function load(){
+            const res = await fetch('/api/educator/tests/{{ test.id }}/summary');
+            const d = await res.json();
+            const ctx = document.getElementById('chart-passfail');
+            if(pfChart) pfChart.destroy();
+            pfChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Passed','Failed'],
+                    datasets: [{ label:'Count', data: [d.passed||0, d.failed||0], backgroundColor: ['#22c55e','#ef4444'] }]
+                },
+                options: { scales: { y: { beginAtZero: true, precision: 0 } } }
+            });
+        }
+        load();
+        setInterval(load, 5000);
+    })();
+    </script>
+</body>
+</html>
+
+

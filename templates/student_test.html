@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ test.title }}</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header class="appbar">
+        <div>{{ test.title }}</div>
+        <nav>
+            <a href="/student">Back</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2>Problem</h2>
+            <pre class="mono">{{ test.problem_description }}</pre>
+        </section>
+        
+        {% if test.scenario %}
+        <section class="card">
+            <h2>Scenario</h2>
+            <pre class="mono">{{ test.scenario }}</pre>
+        </section>
+        {% endif %}
+        
+        {% if test.test_cases_code %}
+        <section class="card">
+            <h2>AI-Generated Tests</h2>
+            <pre class="mono">{{ test.test_cases_code }}</pre>
+        </section>
+        {% endif %}
+        
+        <section class="card">
+            <h2>Submit Your Solution</h2>
+            
+            <!-- ====================================================== -->
+            <!--             ✅ THIS IS THE CORRECTED LINE             -->
+            <!-- ====================================================== -->
+            <form method="post" action="/student/test/{{ test._id }}/submit">
+                <label>Your Code</label>
+                <textarea name="student_code" rows="12" placeholder="Paste only your function(s) and imports. Avoid any top-level code." required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+            
+        </section>
+    </main>
+</body>
+</html>
